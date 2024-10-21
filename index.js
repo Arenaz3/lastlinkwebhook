@@ -21,15 +21,24 @@ const sendDiscordMessage = async (message) => {
 // Endpoint que receberá os eventos da Lastlink
 app.post('/webhook/lastlink', async (req, res) => {
     const event = req.body;
-    console.log('Evento capturado da Lastlink:', event);
 
-    // Monta a mensagem para enviar ao Discord
-    const discordMessage = {
-        content: `Evento Capturado: ${event.Event || 'Evento sem nome'}`
-    };
+    // Extrai os campos relevantes do evento
+    const { Email, Name, PhoneNumber, Document } = event.Buyer || {};
+
+    // Monta a mensagem para enviar ao Discord com os campos solicitados
+    const discordMessage = `
+    **Novo Evento Recebido:**
+    **Email:** ${Email || 'N/A'}
+    **Name:** ${Name || 'N/A'}
+    **PhoneNumber:** ${PhoneNumber || 'N/A'}
+    **Document:** ${Document || 'N/A'}
+    `;
+
+    // Log para verificar no console o que foi capturado
+    console.log('Evento capturado da Lastlink:', discordMessage);
 
     // Envia a mensagem para o Discord
-    await sendDiscordMessage(discordMessage.content);
+    await sendDiscordMessage(discordMessage);
 
     // Retorna a resposta para Lastlink
     res.status(200).send('Evento recebido e enviado ao Discord');
