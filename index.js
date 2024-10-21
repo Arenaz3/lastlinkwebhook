@@ -23,7 +23,9 @@ app.post('/webhook/lastlink', async (req, res) => {
     const event = req.body;
 
     // Extrai os campos relevantes do evento
-    const { Email, Name, PhoneNumber, Document } = event.Buyer || {};
+    const buyer = event.Data?.Buyer || {};
+
+    const { Email, Name, PhoneNumber, Document } = buyer;
 
     // Monta a mensagem para enviar ao Discord com os campos solicitados
     const discordMessage = `
